@@ -1,0 +1,8 @@
+set imap_user=dominik@schlack.net
+set imap_pass=kE!0r7g7%qxnuwAB
+set folder=imaps://imap.strato.de/
+set spoolfile=+INBOX
+mailboxes =INBOX =Spam
+set mbox="~/mail"
+set spoolfile="~/mail"
+set folder="~/mail"

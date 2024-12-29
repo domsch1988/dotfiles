@@ -1,0 +1,22 @@
+IMAPAccount Strato
+Host imap.strato.de
+User dominik@schlack.net
+Pass kE!0r7g7%qxnuwAB
+TLSType IMAPS
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore strato-remote
+Account Strato
+
+MaildirStore strato-local
+SubFolders Verbatim
+# The trailing "/" is important
+Path ~/mail/
+Inbox ~/mail/Inbox
+
+Channel Strato
+Far :strato-remote:
+Near :strato-local:
+Create Both
+Expunge Both
+SyncState *

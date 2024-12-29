@@ -1,0 +1,16 @@
+# Set default values for all following accounts.
+defaults
+auth           on
+tls            on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile        ~/.msmtp.log
+
+# A freemail service
+account        strato
+host           smtp.strato.de
+from           dominik@schlack.net
+user 	       dominik@schlack.net
+password       kE!0r7g7%qxnuwAB
+
+# Set a default account
+account default: strato
