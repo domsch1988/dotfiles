@@ -102,6 +102,20 @@
 
 (use-package nerd-icons)
 
+(use-package nerd-icons-completion
+  :after marginalia
+  :config
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+
+(use-package nerd-icons-corfu
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+(use-package nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+
 (use-package which-key
   :defer t
   :custom
@@ -216,6 +230,14 @@
   :defer t
   :custom
   (magit-log-margin '(t age magit-log-margin-width t 20))
+  (magit-section-initial-visibility-alist
+   '((stashes . hide)
+     (magit-insert-untracked-files . show)
+     (magit-commit-section . show)
+     (magit-unpushed-section . show)))
+  :custom-face
+  (magit-header-line ((t (:family "Noto Sans" :weight bold :height 150))))
+  (magit-section-heading ((t (:family "Noto Sans" :weight bold :height 150))))
   :bind
   ("C-c g g" . magit-status)
   )
@@ -262,6 +284,7 @@
   :defer t
   :bind
   ("C-c g b" . blamer-mode)
+  ("C-c g c" . blamer-show-commit-info)
   )
 
 ;;; Org
@@ -391,15 +414,124 @@
   ("C-ö" . er/expand-region))
 
 (use-package notmuch)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(window-divider ((t (:foreground "cyan")))))
+
+;;; Languages
+(use-package yaml-mode
+  :mode
+  ("\\.yml\\'" . yaml-ts-mode)
+  ("\\.[0-9][0-9][0-9]\\'" . yaml-ts-mode)
+  ("\\.[0-9][0-9]\\'" . yaml-ts-mode)
+  ("\\.[0-9]\\'" . yaml-ts-mode)
+  )
+
+(use-package ini-mode
+  :defer t
+  :mode
+  ("\\inventory\\'" . ini-mode)
+  )
+
+(use-package ansible
+  :custom
+  (ansible-vault-password-file "/home/dosa/.ansible-secret")
+  )
+
+(use-package lua-mode
+  :defer t
+  )
+
+(use-package logview
+  :defer t
+  :config
+  (setq logview-additional-submodes
+        '(("ACS"
+           (format . "TIMESTAMP LEVEL [THREAD] NAME: MESSAGE")
+           (levels . "SLF4J"))
+          ("Configuration"
+           (format . "IGNORED TIMESTAMP LEVEL [THREAD] NAME: MESSAGE")
+           (levels . "SLF4J"))
+	  ))
+  )
+
+;;; Hide Passwords
+(use-package password-mode
+  :defer t
+  :custom
+  (password-mode-password-prefix-regexs
+   '("Password:\s+"
+     ".*_pw:\s+"
+     "passwd:\s+"
+     "password_.*:\s+"
+     "gpg_pass:\s+"
+     "secret:\s+"
+     "acssharepoint_pw\s+"
+     "Passwort:\s+"))
+  )
+
+(use-package password-generator
+  :defer t
+  :custom (password-generator-simple-length 32))
+
+(use-package keychain-environment
+  :init
+  (keychain-refresh-environment)
+  )
+
+(use-package rainbow-mode
+  :defer t
+  :hook
+  (prog-mode . rainbow-mode)
+  )
+
+(use-package undo-tree
+  :custom
+  (undo-tree-history-directory-alist
+   '(("." . "/tmp/")))
+  :init
+  (global-undo-tree-mode))
+
+(use-package spacious-padding
+  :custom
+  (spacious-padding-subtle-mode-line nil)
+  (spacious-padding-widths
+   '( :internal-border-width 5
+      :header-line-width 4
+      :mode-line-width 4
+      :tab-width 4
+      :right-divider-width 10
+      :scroll-bar-width 8
+      :fringe-width 8))
+  :init
+  (spacious-padding-mode)
+  )
+
+(use-package helpful
+  :defer t
+  :bind
+  ("C-c h f" . helpful-function)
+  ("C-c h v" . helpful-variable)
+  ("C-c h h" . helpful-at-point)
+  )
+
+(use-package substitute
+  :defer t
+  )
+
+(use-package visual-regexp
+  :defer t
+  )
+
+(use-package shift-text
+  :bind
+  ("C-S-h" . shift-text-left)
+  ("C-S-j" . shift-text-down)
+  ("C-S-k" . shift-text-up)
+  ("C-S-l" . shift-text-right)
+  )
+
+(use-package multiple-cursors
+  :bind
+  ("C-c c c" . mc/edit-lines)
+  ("C-c c n" . mc/mark-next-like-this)
+  ("C-c c p" . mc/mark-previous-like-this)
+  ("C-c c a" . mc/mark-all-like-this)
+  )
